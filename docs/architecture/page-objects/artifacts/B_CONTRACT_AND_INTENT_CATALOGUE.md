@@ -203,7 +203,7 @@ See `contracts/lectio-document-v2.schema.json` for machine-readable schemas.
 
 ## 5. Intent catalogue
 
-The table below is normative. Machine-readable form is in `contracts/intent-catalogue.v1.json`.
+The table below is normative. Machine-readable form is in the repo-root `contracts/intent-catalogue.v1.json` (not duplicated under this pack).
 
 | Intent | Teacher label | Pedagogical role | Cognitive job | Valid objects |
 |---|---|---|---|---|

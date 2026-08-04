@@ -7,6 +7,7 @@ import type {
 	DocumentBlock,
 	FigureContent,
 	LectioDocument,
+	ListContent,
 	Placement,
 	QuestionsContent,
 	TableContent
@@ -111,6 +112,7 @@ export function validateSemantics(doc: LectioDocument): ValidationIssue[] {
 
 		let asideCount = 0;
 		const blocks = section.blocks;
+		const asideMax = getObject('aside')?.capacity?.maxPerSection;
 
 		for (let bi = 0; bi < blocks.length; bi++) {
 			const block = blocks[bi];
@@ -119,12 +121,12 @@ export function validateSemantics(doc: LectioDocument): ValidationIssue[] {
 			if (block.object === 'aside') asideCount += 1;
 		}
 
-		if (asideCount > 2) {
+		if (asideMax != null && asideCount > asideMax) {
 			issues.push(
 				issue(
 					`${sp}.blocks`,
 					'aside-density',
-					`Section has ${asideCount} asides; more than two may crowd the margin`,
+					`Section has ${asideCount} asides; catalogue maxPerSection is ${asideMax}`,
 					'warning'
 				)
 			);
@@ -229,6 +231,9 @@ function validateBlockSemantics(
 		case 'figure':
 			validateFigure(block.content, bp, issues);
 			break;
+		case 'list':
+			validateList(block.content, bp, issues);
+			break;
 		case 'table':
 			validateTable(block.content, bp, issues);
 			break;
@@ -240,6 +245,20 @@ function validateBlockSemantics(
 			break;
 		default:
 			break;
+	}
+}
+
+function validateList(content: ListContent, bp: string, issues: ValidationIssue[]): void {
+	const itemsMin = getObject('list')?.capacity?.itemsMin;
+	if (itemsMin != null && content.items.length < itemsMin) {
+		issues.push(
+			issue(
+				`${bp}.content.items`,
+				'list-too-short',
+				`List has ${content.items.length} items; catalogue itemsMin is ${itemsMin}`,
+				'warning'
+			)
+		);
 	}
 }
 
@@ -284,6 +303,30 @@ function validateFigure(content: FigureContent, bp: string, issues: ValidationIs
 }
 
 function validateTable(content: TableContent, bp: string, issues: ValidationIssue[]): void {
+	const capacity = getObject('table')?.capacity;
+	const columnsMin = capacity?.columnsMin;
+	const rowsMin = capacity?.rowsMin;
+	if (columnsMin != null && content.columns.length < columnsMin) {
+		issues.push(
+			issue(
+				`${bp}.content.columns`,
+				'table-too-narrow',
+				`Table has ${content.columns.length} columns; catalogue columnsMin is ${columnsMin}`,
+				'warning'
+			)
+		);
+	}
+	if (rowsMin != null && content.rows.length < rowsMin) {
+		issues.push(
+			issue(
+				`${bp}.content.rows`,
+				'table-too-short',
+				`Table has ${content.rows.length} rows; catalogue rowsMin is ${rowsMin}`,
+				'warning'
+			)
+		);
+	}
+
 	const colIds = new Set<string>();
 	for (let ci = 0; ci < content.columns.length; ci++) {
 		const id = content.columns[ci].id;
@@ -324,6 +367,18 @@ function validateTable(content: TableContent, bp: string, issues: ValidationIssu
 }
 
 function validateChoices(content: ChoicesContent, bp: string, issues: ValidationIssue[]): void {
+	const optionsMin = getObject('choices')?.capacity?.optionsMin;
+	if (optionsMin != null && content.options.length < optionsMin) {
+		issues.push(
+			issue(
+				`${bp}.content.options`,
+				'choices-too-few',
+				`Choices has ${content.options.length} options; catalogue optionsMin is ${optionsMin}`,
+				'warning'
+			)
+		);
+	}
+
 	const letters = new Set<string>();
 	for (let oi = 0; oi < content.options.length; oi++) {
 		const opt = content.options[oi];

@@ -9,8 +9,8 @@ This is a long autonomous run. Work through the phases in order. Commit once per
 ## Inputs
 
 - `artifacts/` — A through G, the architecture pack
-- `contracts/object-catalogue.v1.json`, `intent-catalogue.v1.json`, `lectio-document-v2.schema.json`
-- `contracts/base-print.css` — **use the v1.1 patched version**, not the one in the original pack
+- Repo-root `contracts/object-catalogue.v1.json`, `intent-catalogue.v1.json`, `lectio-document-v2.schema.json` (catalogues are not duplicated under this pack)
+- Pack `contracts/base-print.css` — **use the v1.1 patched version**, not the one in the original pack
 - `PATCH-v1.1.md` — four corrections, already applied to the CSS; FIX 1 also requires a schema edit
 - `references/margin-test-2.html` — the proven page geometry, rendered and verified in Chromium
 - `references/Photosynthesis_Booklet.docx` and `grade7_photosynthesis_3_lesson_booklet.pdf` — target quality

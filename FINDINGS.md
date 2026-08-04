@@ -37,6 +37,8 @@ Teacher PDFs are shorter than the hand layout reference (cover + contents + thre
 ## Pack notes
 
 - FIX 1 `front_matter` applied; v1.1 `base-print.css` used
+- Catalogue v1.1.0: capacity + earn/reject on 8 objects; `choose_when`/`not_when` on 11 co-occurring intents; `answer-key.selectable: false`
+- Docs pack no longer duplicates intent/object catalogues — canonical files are repo-root `contracts/`
 - Artifact C planner comparison and Artifact F backend rewiring were not run
 - Brief PATCH 7 full matrix deferred per PATCH v1.3
 

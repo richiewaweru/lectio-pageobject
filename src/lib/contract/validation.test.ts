@@ -128,4 +128,102 @@ describe('schema + semantic validation', () => {
 	it('assertValidDocument throws on errors', () => {
 		expect(() => assertValidDocument({ banana: true })).toThrow(/Invalid LectioDocument/);
 	});
+
+	it('warns when aside count exceeds catalogue maxPerSection', () => {
+		const doc = loadFixture('empty-document.json');
+		doc.sections[0].blocks = [
+			{
+				id: 'h1',
+				object: 'heading',
+				position: 0,
+				intent: undefined,
+				content: { level: 2, text: 'Tips' }
+			},
+			{
+				id: 'p1',
+				object: 'prose',
+				intent: 'orient',
+				position: 1,
+				content: { paragraphs: ['Anchor paragraph for three asides.'] }
+			},
+			{
+				id: 'a1',
+				object: 'aside',
+				intent: 'warn',
+				position: 2,
+				layout: { placement: 'margin' },
+				content: { body: 'One' }
+			},
+			{
+				id: 'a2',
+				object: 'aside',
+				intent: 'emphasise',
+				position: 3,
+				layout: { placement: 'margin' },
+				content: { body: 'Two' }
+			},
+			{
+				id: 'a3',
+				object: 'aside',
+				intent: 'memory-aid',
+				position: 4,
+				layout: { placement: 'margin' },
+				content: { body: 'Three' }
+			}
+		];
+		const issues = validateSemantics(doc);
+		expect(issues.some((i) => i.code === 'aside-density' && i.severity === 'warning')).toBe(true);
+	});
+
+	it('warns on undersized list, table, and choices', () => {
+		const doc = loadFixture('empty-document.json');
+		doc.sections[0].blocks = [
+			{
+				id: 'h1',
+				object: 'heading',
+				position: 0,
+				intent: undefined,
+				content: { level: 2, text: 'Short forms' }
+			},
+			{
+				id: 'l1',
+				object: 'list',
+				intent: 'summarise',
+				position: 1,
+				content: {
+					style: 'unordered',
+					items: [{ text: 'Only one' }, { text: 'Only two' }]
+				}
+			},
+			{
+				id: 't1',
+				object: 'table',
+				intent: 'compare',
+				position: 2,
+				content: {
+					columns: [{ id: 'a', label: 'A' }],
+					rows: [{ cells: { a: 'one' } }],
+					presentation: 'standard'
+				}
+			},
+			{
+				id: 'c1',
+				object: 'choices',
+				intent: 'check-understanding',
+				position: 3,
+				content: {
+					stem: 'Pick one',
+					options: [
+						{ letter: 'A', text: 'Yes' },
+						{ letter: 'B', text: 'No' }
+					]
+				}
+			}
+		];
+		const issues = validateSemantics(doc);
+		expect(issues.some((i) => i.code === 'list-too-short' && i.severity === 'warning')).toBe(true);
+		expect(issues.some((i) => i.code === 'table-too-narrow' && i.severity === 'warning')).toBe(true);
+		expect(issues.some((i) => i.code === 'table-too-short' && i.severity === 'warning')).toBe(true);
+		expect(issues.some((i) => i.code === 'choices-too-few' && i.severity === 'warning')).toBe(true);
+	});
 });

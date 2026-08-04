@@ -55,19 +55,21 @@
     "bytes": 2249
   },
   {
-    "path": "contracts/intent-catalogue.v1.json",
-    "sha256": "6245038d2b3967ef6dafb305d3a9f2c8b26472adfcd60e871eaaa077e369495a",
-    "bytes": 12433
-  },
-  {
     "path": "contracts/lectio-document-v2.schema.json",
     "sha256": "e5b3c8b5e1f66302e345371592576b294d84402085d1ea0de0d9b702eaa8256e",
     "bytes": 3742
   },
   {
-    "path": "contracts/object-catalogue.v1.json",
-    "sha256": "7c08c9d5eca37018ee77f356842e06faf29fff0f0f6c693c42f92e21c218298d",
-    "bytes": 5913
+    "path": "../../../contracts/intent-catalogue.v1.json",
+    "note": "Canonical catalogue lives at repo-root contracts/; not duplicated in this pack",
+    "sha256": "see-repo-root",
+    "bytes": 0
+  },
+  {
+    "path": "../../../contracts/object-catalogue.v1.json",
+    "note": "Canonical catalogue lives at repo-root contracts/; not duplicated in this pack",
+    "sha256": "see-repo-root",
+    "bytes": 0
   },
   {
     "path": "fixtures/planner-comparison-topic.json",

@@ -28,8 +28,8 @@ The old implementation remains available only as a versioned historical path for
 
 1. `artifacts/A_FORK_PLAN.md`
 2. `artifacts/B_CONTRACT_AND_INTENT_CATALOGUE.md`
-3. `contracts/lectio-document-v2.schema.json`
-4. `contracts/intent-catalogue.v1.json`
+3. `contracts/lectio-document-v2.schema.json` (pack copy; synced from repo root)
+4. Intent + object catalogues — canonical at repo-root [`contracts/intent-catalogue.v1.json`](../../../contracts/intent-catalogue.v1.json) and [`contracts/object-catalogue.v1.json`](../../../contracts/object-catalogue.v1.json) (not duplicated in this pack)
 5. `artifacts/C_CONTRACT_VALIDATION_TEST.md`
 6. `fixtures/planner-palette-v2.txt`
 7. `fixtures/planner-comparison-topic.json`
