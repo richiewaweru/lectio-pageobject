@@ -3,7 +3,6 @@
 	import SectionView from './SectionView.svelte';
 	import BlockView from './BlockView.svelte';
 	import '$lib/print/base-print.css';
-	import '$lib/print/screen.css';
 
 	let {
 		document: doc,
