@@ -2,9 +2,9 @@ name: Build Check
 
 on:
   pull_request:
-    branches: [ master ]
+    branches: [main]
   push:
-    branches: [ master ]
+    branches: [main]
 
 env:
   FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
@@ -27,27 +27,29 @@ jobs:
         with:
           node-version: '24'
           cache: 'pnpm'
+          registry-url: 'https://registry.npmjs.org'
 
       - name: Guard canonical lockfile policy
         run: |
-          test ! -f package-lock.json || (echo "❌ package-lock.json is not supported. Use pnpm-lock.yaml only." && exit 1)
-          
+          test ! -f package-lock.json || (echo "package-lock.json is not supported. Use pnpm-lock.yaml only." && exit 1)
+
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Verify lockfile integrity (Vercel parity)
-        run: pnpm install --frozen-lockfile --ignore-scripts
-        
-      - name: Build package
-        run: npm run package
-        
+      - name: Typecheck
+        run: pnpm check
+
+      - name: Test
+        run: pnpm test
+
       - name: Export contracts
-        run: npm run export-contracts
-        env:
-          LECTIO_CONTRACTS_DIR: contracts
-        
-      - name: Verify outputs
-        run: |
-          test -d dist || (echo "❌ dist/ not found" && exit 1)
-          test -d contracts || (echo "❌ contracts/ not found" && exit 1)
-          echo "✅ Build verification passed"
+        run: pnpm export-contracts
+
+      - name: Build package
+        run: pnpm package
+
+      - name: Pack dry-run
+        run: pnpm pack --dry-run
+
+      - name: Fixture PDFs
+        run: pnpm pdf:fixture

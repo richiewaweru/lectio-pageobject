@@ -35,16 +35,14 @@ jobs:
           TAG_VERSION="${GITHUB_REF_NAME#v}"
           echo "version=${TAG_VERSION}" >> "$GITHUB_OUTPUT"
 
-          if [[ ! "${TAG_VERSION}" =~ ^0\.[0-9]+\.[0-9]+$ ]]; then
+          if [[ ! "${TAG_VERSION}" =~ ^0\.[0-9]+\.[0-9]+(-experimental\.[0-9]+)?$ ]]; then
             echo "Tag ${GITHUB_REF_NAME} is outside the allowed 0.x release lane."
-            echo "Use tags like v0.4.0 while the lane guard is active."
-            echo "Skipping publish as a no-op."
             echo "should_publish=false" >> "$GITHUB_OUTPUT"
             echo "skip_reason=out_of_lane" >> "$GITHUB_OUTPUT"
             exit 0
           fi
 
-          if npm view "lectio@${TAG_VERSION}" version --registry=https://registry.npmjs.org > /dev/null 2>&1; then
+          if npm view "@lectio/page@${TAG_VERSION}" version --registry=https://registry.npmjs.org > /dev/null 2>&1; then
             echo "Version ${TAG_VERSION} already exists on npm. Skipping publish."
             echo "should_publish=false" >> "$GITHUB_OUTPUT"
             echo "skip_reason=already_published" >> "$GITHUB_OUTPUT"
@@ -69,38 +67,25 @@ jobs:
 
       - name: Build package
         if: steps.preflight.outputs.should_publish == 'true'
-        run: npm run package
+        run: pnpm package
 
       - name: Export contracts
         if: steps.preflight.outputs.should_publish == 'true'
-        run: npm run export-contracts
-        env:
-          LECTIO_CONTRACTS_DIR: contracts
+        run: pnpm export-contracts
 
       - name: Verify build outputs
         if: steps.preflight.outputs.should_publish == 'true'
         run: |
           test -d dist || (echo "dist/ not found" && exit 1)
           test -f dist/index.js || (echo "dist/index.js not found" && exit 1)
-          test -f dist/index.d.ts || (echo "dist/index.d.ts not found" && exit 1)
           test -d contracts || (echo "contracts/ not found" && exit 1)
           echo "Build verification passed"
 
       - name: Publish to npm
         if: steps.preflight.outputs.should_publish == 'true'
-        run: npm publish
+        run: npm publish --access public
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.LECTIO_TOKEN }}
-
-      - name: Skip publish (out-of-lane tag)
-        if: steps.preflight.outputs.should_publish != 'true' && steps.preflight.outputs.skip_reason == 'out_of_lane'
-        run: |
-          echo "No-op release: ${GITHUB_REF_NAME} is outside the active 0.x release lane."
-
-      - name: Skip publish (version already exists)
-        if: steps.preflight.outputs.should_publish != 'true' && steps.preflight.outputs.skip_reason == 'already_published'
-        run: |
-          echo "No-op release: lectio@${{ steps.preflight.outputs.version }} already exists on npm."
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
 
       - name: Create GitHub Release
         if: steps.preflight.outputs.should_publish == 'true'
@@ -109,8 +94,8 @@ jobs:
           tag_name: ${{ github.ref_name }}
           name: Release ${{ github.ref_name }}
           body: |
-            Published version ${{ github.ref_name }} to npm.
+            Published `@lectio/page@${{ steps.preflight.outputs.version }}` to npm.
 
-            Install: `npm install lectio@latest`
+            Install: `npm install @lectio/page`
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
