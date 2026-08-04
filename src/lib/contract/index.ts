@@ -31,5 +31,10 @@ export type {
 	WorkedExampleBlock,
 	WorkedExampleContent
 } from './document';
-export { validateDocument } from './validation';
+export {
+	assertValidDocument,
+	validateDocument,
+	validateSemantics,
+	validateStructure
+} from './validation';
 export type { ValidationIssue } from './validation';
