@@ -1,40 +1,26 @@
 <script lang="ts">
-	import type { DocumentBlock, LectioSection } from '$lib/contract/document';
+	import type { LectioSection } from '$lib/contract/document';
+	import { buildRenderUnits } from '$lib/normalize/document';
 	import BlockView from './BlockView.svelte';
 	import HeadingBinding from './HeadingBinding.svelte';
 
 	let { section }: { section: LectioSection } = $props();
 
-	interface RenderUnit {
-		kind: 'binding' | 'block';
-		heading?: DocumentBlock;
-		block?: DocumentBlock;
-	}
-
-	function units(blocks: DocumentBlock[]): RenderUnit[] {
-		const sorted = [...blocks].sort((a, b) => a.position - b.position);
-		const out: RenderUnit[] = [];
-		for (let i = 0; i < sorted.length; i++) {
-			const block = sorted[i];
-			if (block.object === 'heading' && i + 1 < sorted.length) {
-				out.push({ kind: 'binding', heading: block, block: sorted[i + 1] });
-				i += 1;
-			} else {
-				out.push({ kind: 'block', block });
-			}
-		}
-		return out;
-	}
+	/**
+	 * Array order is canonical after normalizeDocument.
+	 * section.title is for contents/nav only — not rendered as a heading here.
+	 */
+	const units = $derived(buildRenderUnits(section.blocks));
 </script>
 
 <section class="lectio-section" id={section.id}>
-	{#each units(section.blocks) as unit}
-		{#if unit.kind === 'binding' && unit.heading && unit.block}
+	{#each units as unit (unit.kind === 'heading-binding' ? unit.heading.id : unit.block.id)}
+		{#if unit.kind === 'heading-binding'}
 			<HeadingBinding>
 				<BlockView block={unit.heading} />
-				<BlockView block={unit.block} />
+				<BlockView block={unit.lead} />
 			</HeadingBinding>
-		{:else if unit.block}
+		{:else}
 			<BlockView block={unit.block} />
 		{/if}
 	{/each}
