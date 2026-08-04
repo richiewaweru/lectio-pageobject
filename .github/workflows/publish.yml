@@ -1,0 +1,116 @@
+name: Publish to npm
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 10.14.0
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          registry-url: 'https://registry.npmjs.org'
+          cache: 'pnpm'
+
+      - name: Preflight release checks
+        id: preflight
+        shell: bash
+        run: |
+          set -euo pipefail
+          TAG_VERSION="${GITHUB_REF_NAME#v}"
+          echo "version=${TAG_VERSION}" >> "$GITHUB_OUTPUT"
+
+          if [[ ! "${TAG_VERSION}" =~ ^0\.[0-9]+\.[0-9]+$ ]]; then
+            echo "Tag ${GITHUB_REF_NAME} is outside the allowed 0.x release lane."
+            echo "Use tags like v0.4.0 while the lane guard is active."
+            echo "Skipping publish as a no-op."
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+            echo "skip_reason=out_of_lane" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          if npm view "lectio@${TAG_VERSION}" version --registry=https://registry.npmjs.org > /dev/null 2>&1; then
+            echo "Version ${TAG_VERSION} already exists on npm. Skipping publish."
+            echo "should_publish=false" >> "$GITHUB_OUTPUT"
+            echo "skip_reason=already_published" >> "$GITHUB_OUTPUT"
+          else
+            echo "Version ${TAG_VERSION} is not published yet. Continuing."
+            echo "should_publish=true" >> "$GITHUB_OUTPUT"
+            echo "skip_reason=none" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Set version from tag
+        if: steps.preflight.outputs.should_publish == 'true'
+        run: npm pkg set version=${{ steps.preflight.outputs.version }}
+
+      - name: Guard canonical lockfile policy
+        if: steps.preflight.outputs.should_publish == 'true'
+        run: |
+          test ! -f package-lock.json || (echo "package-lock.json detected. Use pnpm-lock.yaml only." && exit 1)
+
+      - name: Install dependencies
+        if: steps.preflight.outputs.should_publish == 'true'
+        run: pnpm install --frozen-lockfile
+
+      - name: Build package
+        if: steps.preflight.outputs.should_publish == 'true'
+        run: npm run package
+
+      - name: Export contracts
+        if: steps.preflight.outputs.should_publish == 'true'
+        run: npm run export-contracts
+        env:
+          LECTIO_CONTRACTS_DIR: contracts
+
+      - name: Verify build outputs
+        if: steps.preflight.outputs.should_publish == 'true'
+        run: |
+          test -d dist || (echo "dist/ not found" && exit 1)
+          test -f dist/index.js || (echo "dist/index.js not found" && exit 1)
+          test -f dist/index.d.ts || (echo "dist/index.d.ts not found" && exit 1)
+          test -d contracts || (echo "contracts/ not found" && exit 1)
+          echo "Build verification passed"
+
+      - name: Publish to npm
+        if: steps.preflight.outputs.should_publish == 'true'
+        run: npm publish
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.LECTIO_TOKEN }}
+
+      - name: Skip publish (out-of-lane tag)
+        if: steps.preflight.outputs.should_publish != 'true' && steps.preflight.outputs.skip_reason == 'out_of_lane'
+        run: |
+          echo "No-op release: ${GITHUB_REF_NAME} is outside the active 0.x release lane."
+
+      - name: Skip publish (version already exists)
+        if: steps.preflight.outputs.should_publish != 'true' && steps.preflight.outputs.skip_reason == 'already_published'
+        run: |
+          echo "No-op release: lectio@${{ steps.preflight.outputs.version }} already exists on npm."
+
+      - name: Create GitHub Release
+        if: steps.preflight.outputs.should_publish == 'true'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.ref_name }}
+          name: Release ${{ github.ref_name }}
+          body: |
+            Published version ${{ github.ref_name }} to npm.
+
+            Install: `npm install lectio@latest`
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

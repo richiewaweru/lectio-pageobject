@@ -1,0 +1,28 @@
+{
+  "manifest_version": "1.0.0",
+  "package": "@lectio/page",
+  "contract_version": "1.0.0",
+  "generated_at": "2026-08-04T10:00:18.176Z",
+  "files": [
+    {
+      "path": "lectio-document-v2.schema.json",
+      "sha256": "f62543333bc135372b9b1f07a686d89b116b38906a4030514c5164e716d56f5a",
+      "bytes": 3888
+    },
+    {
+      "path": "object-catalogue.v1.json",
+      "sha256": "7c08c9d5eca37018ee77f356842e06faf29fff0f0f6c693c42f92e21c218298d",
+      "bytes": 5913
+    },
+    {
+      "path": "intent-catalogue.v1.json",
+      "sha256": "6245038d2b3967ef6dafb305d3a9f2c8b26472adfcd60e871eaaa077e369495a",
+      "bytes": 12433
+    },
+    {
+      "path": "base-print.css",
+      "sha256": "fa7afd1a71fefc35d68ec8ae0f9bb6c912de39318ad72ced3a658811cd92b322",
+      "bytes": 6459
+    }
+  ]
+}

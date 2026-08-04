@@ -1,0 +1,151 @@
+{
+  "catalogue_version": "1.0.0",
+  "objects": {
+    "heading": {
+      "holds": "Heading text, hierarchy level, optional numbering.",
+      "content_schema": {
+        "level": "1|2|3",
+        "text": "string",
+        "number": "string|null"
+      },
+      "placement": [
+        "main",
+        "spanning"
+      ],
+      "fragmentation": "Must be bound with the first following block in one break-inside:avoid wrapper. Never render alone.",
+      "emphasis": "Type size, weight, rule, and spacing only. No box.",
+      "screen_layer": "Review wrapper may show selection and hierarchy controls outside the print subtree."
+    },
+    "prose": {
+      "holds": "Paragraphs and restrained inline nodes.",
+      "content_schema": {
+        "paragraphs": "RichParagraph[]"
+      },
+      "placement": [
+        "main"
+      ],
+      "fragmentation": "Splits freely with widows/orphans. Paragraphs may split.",
+      "emphasis": "Inline weight, italic, small caps, and whitespace. No background or border.",
+      "screen_layer": "Optional hover boundary and edit handle outside print subtree."
+    },
+    "list": {
+      "holds": "Ordered or unordered items with optional lead-in.",
+      "content_schema": {
+        "style": "ordered|unordered|steps|glossary",
+        "lead_in": "RichText|null",
+        "items": "ListItem[]"
+      },
+      "placement": [
+        "main",
+        "margin"
+      ],
+      "fragmentation": "List may split between items; individual item avoids splitting when practical.",
+      "emphasis": "Markers, hanging indent, weight, and spacing. No box.",
+      "screen_layer": "Editing controls wrap list; no student-visible object label."
+    },
+    "table": {
+      "holds": "Columns, rows, header, caption, and semantic presentation hint.",
+      "content_schema": {
+        "columns": "TableColumn[]",
+        "rows": "TableRow[]",
+        "caption": "string|null",
+        "presentation": "standard|comparison|timeline"
+      },
+      "placement": [
+        "main",
+        "spanning"
+      ],
+      "fragmentation": "May split across pages. thead repeats. Rows avoid splitting.",
+      "emphasis": "Rules, alignment, weight, and sparse header tint only when photocopy-safe. No enclosing box.",
+      "screen_layer": "Column resize/edit affordances outside print subtree."
+    },
+    "figure": {
+      "holds": "Image or SVG asset, caption, alt text, width hint.",
+      "content_schema": {
+        "asset": "FigureAsset",
+        "caption": "string|null",
+        "alt_text": "string",
+        "width": "main|span"
+      },
+      "placement": [
+        "main",
+        "spanning"
+      ],
+      "fragmentation": "Figure and caption are atomic. May move to next page.",
+      "emphasis": "Scale, whitespace, caption typography, and optional hairline around the plate only—not a card.",
+      "screen_layer": "Asset status and replacement controls outside print subtree."
+    },
+    "aside": {
+      "holds": "Short set-apart note with optional student-facing label.",
+      "content_schema": {
+        "label": "string|null",
+        "body": "RichText"
+      },
+      "placement": [
+        "margin",
+        "main"
+      ],
+      "fragmentation": "Atomic. Margin placement uses float, clear:right, and negative margin. Move cleanly if it does not fit.",
+      "emphasis": "The only object allowed a border or background. Default is a single vertical rule with restrained label.",
+      "screen_layer": "Can receive intent badge in teacher review only; badge excluded from print."
+    },
+    "worked-example": {
+      "holds": "Problem/setup, ordered reasoning steps, final answer, optional checks.",
+      "content_schema": {
+        "title": "string|null",
+        "problem": "RichText",
+        "steps": "WorkedStep[]",
+        "answer": "RichText",
+        "check": "RichText|null"
+      },
+      "placement": [
+        "main",
+        "spanning"
+      ],
+      "fragmentation": "May split between steps. A step avoids internal split where practical. Final step and answer stay together.",
+      "emphasis": "Numbered steps, hanging labels, indentation, and rules. No enclosing box.",
+      "screen_layer": "Step editing and collapse controls may exist only in review shell."
+    },
+    "questions": {
+      "holds": "Open prompts, marks, response guidance, answer-space specification.",
+      "content_schema": {
+        "items": "QuestionItem[]",
+        "instructions": "RichText|null"
+      },
+      "placement": [
+        "main",
+        "spanning"
+      ],
+      "fragmentation": "Split between questions, never inside a question. Prompt stays with minimum answer space.",
+      "emphasis": "Hanging numbers, marks aligned to edge, ruled answer space. No cards.",
+      "screen_layer": "Teacher may inspect answer metadata in adjacent review panel."
+    },
+    "choices": {
+      "holds": "Stem, lettered options, optional marks.",
+      "content_schema": {
+        "stem": "RichText",
+        "options": "ChoiceOption[]",
+        "marks": "number|null"
+      },
+      "placement": [
+        "main"
+      ],
+      "fragmentation": "Atomic when it fits; otherwise keep stem with at least two options and split only between options.",
+      "emphasis": "Letters A/B/C/D, hanging indent, whitespace. Never radio controls.",
+      "screen_layer": "Interactive selection may appear in review mode but print renderer emits letters only."
+    },
+    "answer-key": {
+      "holds": "Question references, expected answers, alternatives, working, rubric and misconceptions.",
+      "content_schema": {
+        "groups": "AnswerGroup[]"
+      },
+      "placement": [
+        "main",
+        "spanning"
+      ],
+      "fragmentation": "Split between entries. Entry keeps question reference with first answer line.",
+      "emphasis": "Heading hierarchy, compact typography, rules. No card.",
+      "screen_layer": "Teacher-only visibility control outside document content."
+    }
+  }
+}

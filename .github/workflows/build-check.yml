@@ -1,0 +1,53 @@
+name: Build Check
+
+on:
+  pull_request:
+    branches: [ master ]
+  push:
+    branches: [ master ]
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 10.14.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+          cache: 'pnpm'
+
+      - name: Guard canonical lockfile policy
+        run: |
+          test ! -f package-lock.json || (echo "❌ package-lock.json is not supported. Use pnpm-lock.yaml only." && exit 1)
+          
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Verify lockfile integrity (Vercel parity)
+        run: pnpm install --frozen-lockfile --ignore-scripts
+        
+      - name: Build package
+        run: npm run package
+        
+      - name: Export contracts
+        run: npm run export-contracts
+        env:
+          LECTIO_CONTRACTS_DIR: contracts
+        
+      - name: Verify outputs
+        run: |
+          test -d dist || (echo "❌ dist/ not found" && exit 1)
+          test -d contracts || (echo "❌ contracts/ not found" && exit 1)
+          echo "✅ Build verification passed"

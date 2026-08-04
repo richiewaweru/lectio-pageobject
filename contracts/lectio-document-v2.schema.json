@@ -1,0 +1,142 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://lectio.example/contracts/lectio-document-v2.schema.json",
+  "title": "LectioDocumentV2",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "document_version",
+    "contract_version",
+    "id",
+    "title",
+    "language",
+    "metadata",
+    "sections"
+  ],
+  "properties": {
+    "document_version": { "const": 2 },
+    "contract_version": { "type": "string" },
+    "id": { "type": "string", "minLength": 1 },
+    "title": { "type": "string", "minLength": 1 },
+    "language": { "type": "string", "minLength": 2 },
+    "subject": { "type": "string" },
+    "audience": { "type": "object" },
+    "metadata": { "type": "object" },
+    "front_matter": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "cover": { "type": "boolean", "default": true },
+        "contents": { "type": "boolean", "default": true },
+        "running_head": { "type": ["string", "null"] },
+        "fields": {
+          "type": "array",
+          "description": "Blank labelled lines on the cover, e.g. Student Name, Date.",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "sections": {
+      "type": "array",
+      "items": { "$ref": "#/$defs/section" }
+    },
+    "answer_key": { "$ref": "#/$defs/answer-key" }
+  },
+  "$defs": {
+    "section": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "title", "blocks"],
+      "properties": {
+        "id": { "type": "string" },
+        "title": { "type": "string" },
+        "blocks": {
+          "type": "array",
+          "items": { "$ref": "#/$defs/block" }
+        }
+      }
+    },
+    "block-base": {
+      "type": "object",
+      "required": ["id", "object", "intent", "position", "content"],
+      "properties": {
+        "id": { "type": "string" },
+        "object": {
+          "enum": [
+            "heading",
+            "prose",
+            "list",
+            "table",
+            "figure",
+            "aside",
+            "worked-example",
+            "questions",
+            "choices",
+            "answer-key"
+          ]
+        },
+        "intent": {
+          "enum": [
+            "orient",
+            "activate-prior-knowledge",
+            "state-goal",
+            "define",
+            "name-parts",
+            "classify",
+            "compare",
+            "sequence",
+            "explain",
+            "explain-cause",
+            "trace-flow",
+            "show-structure",
+            "demonstrate",
+            "model-thinking",
+            "derive",
+            "interpret",
+            "apply",
+            "transfer",
+            "practise-guided",
+            "practise-independent",
+            "check-understanding",
+            "diagnose-misconception",
+            "warn",
+            "emphasise",
+            "memory-aid",
+            "summarise",
+            "connect-forward",
+            "connect-back",
+            "reflect",
+            "investigate",
+            "evaluate",
+            "answer-key"
+          ]
+        },
+        "position": { "type": "integer", "minimum": 0 },
+        "role": { "type": "string" },
+        "layout": {
+          "type": "object",
+          "properties": {
+            "placement": {
+              "enum": ["main", "margin", "spanning"]
+            }
+          }
+        },
+        "content": { "type": "object" }
+      }
+    },
+    "block": {
+      "allOf": [{ "$ref": "#/$defs/block-base" }]
+    },
+    "answer-key": {
+      "type": "object",
+      "required": ["id", "object", "intent", "position", "content"],
+      "properties": {
+        "id": { "type": "string" },
+        "object": { "const": "answer-key" },
+        "intent": { "const": "answer-key" },
+        "position": { "type": "integer", "minimum": 0 },
+        "content": { "type": "object" }
+      }
+    }
+  }
+}
