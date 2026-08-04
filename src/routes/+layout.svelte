@@ -1,7 +1,11 @@
 <script lang="ts">
+	import { page } from '$app/stores';
 	import favicon from '$lib/assets/favicon.svg';
+	import '../app.css';
 
 	let { children } = $props();
+
+	const printMode = $derived($page.url.searchParams.get('print') === '1');
 </script>
 
 <svelte:head>
@@ -9,19 +13,23 @@
 	<title>@lectio/page — print-native documents</title>
 </svelte:head>
 
-<div class="app-shell">
-	<header class="app-header">
-		<a href="/" class="brand">@lectio/page</a>
-		<nav>
-			<a href="/">Deliverables</a>
-			<a href="/fixtures">Fixtures</a>
-			<a href="/objects">Objects</a>
-		</nav>
-	</header>
-	<main>
-		{@render children()}
-	</main>
-</div>
+{#if printMode}
+	{@render children()}
+{:else}
+	<div class="app-shell">
+		<header class="app-header">
+			<a href="/" class="brand">@lectio/page</a>
+			<nav>
+				<a href="/">Deliverables</a>
+				<a href="/fixtures">Fixtures</a>
+				<a href="/objects">Objects</a>
+			</nav>
+		</header>
+		<main>
+			{@render children()}
+		</main>
+	</div>
+{/if}
 
 <style>
 	:global(body) {
