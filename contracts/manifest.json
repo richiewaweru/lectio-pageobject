@@ -2,7 +2,7 @@
   "manifest_version": "1.0.0",
   "package": "@lectio/page",
   "contract_version": "1.0.0",
-  "generated_at": "2026-08-04T11:58:39.181Z",
+  "generated_at": "2026-08-04T12:12:49.400Z",
   "files": [
     {
       "path": "lectio-document-v2.schema.json",

@@ -1,7 +1,7 @@
 # FINDINGS — Page-object experiment
 
-Branch: `page-objects-v2`  
-Package: `@lectio/page@0.1.0-experimental.0`
+Package: `@lectio/page@0.1.0-experimental.0`  
+Repository: `lectio-pageobject` (`main`)
 
 ## Did ten objects suffice?
 
@@ -11,22 +11,42 @@ Yes for the photosynthesis reference rebuild. All teaching moves in the three ha
 
 `table` absorbed the comparison equation cleanly with `presentation: "comparison"`. Timeline was not exercised in this fixture; still the likeliest resist case for later lessons.
 
-## Hard rules bent?
+## Heading
 
-Heading↔intent compatibility is soft for `heading` because the intent catalogue does not list `heading` under `valid_objects`. Heading is treated as structural and binds to the following block. Report as pack follow-up: either add `heading` to relevant intents or declare heading intent-free in the schema.
+Heading is structural and intent-free. It binds to the following substantive block. Compatibility checks return false for `heading`.
 
-## Page count
+## Page counts (measured)
 
-Reference rebuild is three content sections plus cover and contents. PDF artifacts written to `out/` via `pnpm pdf:fixture`. Compare visually against `docs/architecture/page-objects/references/uploaded/grade7_photosynthesis_3_lesson_booklet.pdf` and the problem PDF `Lessons · Lectio.pdf`.
+| Artifact | Pages |
+| --- | --- |
+| Reference booklet `grade7_photosynthesis_3_lesson_booklet.pdf` | **10** |
+| Fixture teacher PDF (`pnpm pdf:fixture`, bg on/off) | **6** (equal for both) |
+| Fixture student PDF | **5** (no answer-key page) |
+
+Teacher PDFs are shorter than the hand layout reference (cover + contents + three sections + answer-key page break). Counts come from `/Type /Page` markers in the PDF binary, not visual estimate.
+
+## PDF gate (executed)
+
+`pnpm pdf:fixture` builds the app, previews `/fixtures/photosynthesis-ref?print=1`, and drives Playwright against real `LectioDocumentView`:
+
+- Teacher edition: `out/photosynthesis-ref-bg-on.pdf`, `out/photosynthesis-ref-bg-off.pdf` — same page count; DOM includes all ten objects including `.lectio-answer-key`
+- Student edition: `out/photosynthesis-ref-student.pdf` — answer-key absent
+- Fail-fast if Chromium missing; `postinstall` runs `playwright install chromium`
+- Print route has no `.lectio-review-chrome`
 
 ## Pack notes
 
-- FIX 1 `front_matter` applied to schema and rendered as cover/contents furniture.
-- v1.1 `base-print.css` used (borders for answer lines; geometry vars; table span).
-- Artifact C planner comparison and Artifact F backend rewiring were not run in this library wave.
+- FIX 1 `front_matter` applied; v1.1 `base-print.css` used
+- Artifact C planner comparison and Artifact F backend rewiring were not run
+- Brief PATCH 7 full matrix deferred per PATCH v1.3
 
-## Verification
+## Verification meters (target: zero)
 
-- Legacy trees deleted (`components/lectio`, registry, SectionContent, templates, print-theme, old docs).
-- `rg` for `usePrintMode|printMode|BLOCK_FIELD_ORDER|SectionContent|component_id` in `src/` should be empty.
-- Web deliverables: `/`, `/fixtures`, `/fixtures/photosynthesis-ref`, `/objects`.
+| Meter | Status |
+| --- | --- |
+| Unsafe `as unknown as` in BlockView | zero |
+| Generic `Record<string, unknown>` block content | zero |
+| String-template PDF rendering | zero |
+| `screen.css` imported by LectioDocumentView | zero |
+| Credential literals in `.npmrc` | zero |
+| Pedagogical boxes outside aside | zero |
