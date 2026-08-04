@@ -14,7 +14,11 @@
     "cover": true,
     "contents": true,
     "running_head": "Photosynthesis",
-    "fields": ["Student Name", "Date", "Class"]
+    "fields": [
+      "Student Name",
+      "Date",
+      "Class"
+    ]
   },
   "sections": [
     {
@@ -24,9 +28,12 @@
         {
           "id": "b1",
           "object": "heading",
-          "intent": "orient",
           "position": 0,
-          "content": { "level": 2, "text": "What is photosynthesis?", "number": "1" }
+          "content": {
+            "level": 2,
+            "text": "What is photosynthesis?",
+            "number": "1"
+          }
         },
         {
           "id": "b2",
@@ -69,9 +76,15 @@
             "style": "unordered",
             "lead_in": "You will need to know these inputs and outputs:",
             "items": [
-              { "text": "Inputs: carbon dioxide, water, light energy" },
-              { "text": "Outputs: glucose, oxygen" },
-              { "text": "Where: mainly in chloroplasts inside leaf cells" }
+              {
+                "text": "Inputs: carbon dioxide, water, light energy"
+              },
+              {
+                "text": "Outputs: glucose, oxygen"
+              },
+              {
+                "text": "Where: mainly in chloroplasts inside leaf cells"
+              }
             ]
           }
         },
@@ -80,7 +93,9 @@
           "object": "figure",
           "intent": "show-structure",
           "position": 5,
-          "layout": { "placement": "spanning" },
+          "layout": {
+            "placement": "spanning"
+          },
           "content": {
             "alt_text": "Simple leaf cross-section showing chloroplasts in palisade cells",
             "caption": "Figure 1. Chloroplasts are concentrated where light is strongest.",
@@ -101,9 +116,12 @@
         {
           "id": "b7",
           "object": "heading",
-          "intent": "trace-flow",
           "position": 0,
-          "content": { "level": 2, "text": "Following the flow", "number": "2" }
+          "content": {
+            "level": 2,
+            "text": "Following the flow",
+            "number": "2"
+          }
         },
         {
           "id": "b8",
@@ -121,13 +139,21 @@
           "object": "table",
           "intent": "compare",
           "position": 2,
-          "layout": { "placement": "spanning" },
+          "layout": {
+            "placement": "spanning"
+          },
           "content": {
             "presentation": "comparison",
             "caption": "Word and symbol equations",
             "columns": [
-              { "id": "form", "label": "Form" },
-              { "id": "equation", "label": "Equation" }
+              {
+                "id": "form",
+                "label": "Form"
+              },
+              {
+                "id": "equation",
+                "label": "Equation"
+              }
             ],
             "rows": [
               {
@@ -154,9 +180,15 @@
             "title": "Balancing check",
             "problem": "Show that atoms balance on both sides of the symbol equation.",
             "steps": [
-              { "text": "Count carbon: 6 on the left, 6 inside glucose on the right." },
-              { "text": "Count hydrogen: 12 from water on the left, 12 in glucose on the right." },
-              { "text": "Count oxygen: 18 on the left, 6 in glucose + 12 in oxygen gas on the right." }
+              {
+                "text": "Count carbon: 6 on the left, 6 inside glucose on the right."
+              },
+              {
+                "text": "Count hydrogen: 12 from water on the left, 12 in glucose on the right."
+              },
+              {
+                "text": "Count oxygen: 18 on the left, 6 in glucose + 12 in oxygen gas on the right."
+              }
             ],
             "answer": "Atoms balance; the equation is conserved.",
             "check": "If oxygen counts do not match, re-check the coefficients."
@@ -181,9 +213,12 @@
         {
           "id": "b12",
           "object": "heading",
-          "intent": "check-understanding",
           "position": 0,
-          "content": { "level": 2, "text": "Check your understanding", "number": "3" }
+          "content": {
+            "level": 2,
+            "text": "Check your understanding",
+            "number": "3"
+          }
         },
         {
           "id": "b13",
@@ -194,10 +229,22 @@
             "stem": "Which statement is correct?",
             "marks": 1,
             "options": [
-              { "letter": "A", "text": "Plants only photosynthesise; they never respire." },
-              { "letter": "B", "text": "Photosynthesis stores light energy as chemical energy in glucose." },
-              { "letter": "C", "text": "Oxygen is an essential input for photosynthesis." },
-              { "letter": "D", "text": "Photosynthesis happens only at night." }
+              {
+                "letter": "A",
+                "text": "Plants only photosynthesise; they never respire."
+              },
+              {
+                "letter": "B",
+                "text": "Photosynthesis stores light energy as chemical energy in glucose."
+              },
+              {
+                "letter": "C",
+                "text": "Oxygen is an essential input for photosynthesis."
+              },
+              {
+                "letter": "D",
+                "text": "Photosynthesis happens only at night."
+              }
             ]
           }
         },
@@ -233,9 +280,15 @@
             "style": "ordered",
             "lead_in": "Summary",
             "items": [
-              { "text": "Photosynthesis converts light energy into chemical energy." },
-              { "text": "Inputs are carbon dioxide and water; outputs are glucose and oxygen." },
-              { "text": "Chloroplasts are the sites of the process." }
+              {
+                "text": "Photosynthesis converts light energy into chemical energy."
+              },
+              {
+                "text": "Inputs are carbon dioxide and water; outputs are glucose and oxygen."
+              },
+              {
+                "text": "Chloroplasts are the sites of the process."
+              }
             ]
           }
         },

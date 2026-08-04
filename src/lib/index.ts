@@ -2,7 +2,9 @@ export type {
 	LectioDocument,
 	DocumentBlock,
 	IntentId,
-	PageObject
+	PageObject,
+	AnswerKeyBlock,
+	HeadingBlock
 } from './contract';
 export type { ValidationIssue } from './contract/validation';
 export { PAGE_OBJECTS, INTENT_IDS, validateDocument } from './contract';

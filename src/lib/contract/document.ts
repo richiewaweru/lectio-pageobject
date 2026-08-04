@@ -19,14 +19,21 @@ export interface LayoutHint {
 	placement?: Placement;
 }
 
-export interface BlockBase {
+/**
+ * Generic block base. Heading uses TIntent = undefined (structural; no pedagogical intent).
+ */
+export interface BlockBase<
+	TObject extends PageObject,
+	TContent,
+	TIntent extends IntentId | undefined = IntentId
+> {
 	id: string;
-	object: PageObject;
-	intent: IntentId;
+	object: TObject;
 	position: number;
+	content: TContent;
+	intent: TIntent;
 	role?: string;
 	layout?: LayoutHint;
-	content: Record<string, unknown>;
 }
 
 export interface HeadingContent {
@@ -137,7 +144,30 @@ export interface AnswerKeyContent {
 	groups: AnswerGroup[];
 }
 
-export type DocumentBlock = BlockBase;
+/** Heading is structural page furniture — no pedagogical intent. */
+export type HeadingBlock = BlockBase<'heading', HeadingContent, undefined>;
+
+export type ProseBlock = BlockBase<'prose', ProseContent>;
+export type ListBlock = BlockBase<'list', ListContent>;
+export type TableBlock = BlockBase<'table', TableContent>;
+export type FigureBlock = BlockBase<'figure', FigureContent>;
+export type AsideBlock = BlockBase<'aside', AsideContent>;
+export type WorkedExampleBlock = BlockBase<'worked-example', WorkedExampleContent>;
+export type QuestionsBlock = BlockBase<'questions', QuestionsContent>;
+export type ChoicesBlock = BlockBase<'choices', ChoicesContent>;
+export type AnswerKeyBlock = BlockBase<'answer-key', AnswerKeyContent, 'answer-key'>;
+
+export type DocumentBlock =
+	| HeadingBlock
+	| ProseBlock
+	| ListBlock
+	| TableBlock
+	| FigureBlock
+	| AsideBlock
+	| WorkedExampleBlock
+	| QuestionsBlock
+	| ChoicesBlock
+	| AnswerKeyBlock;
 
 export interface LectioSection {
 	id: string;
@@ -170,5 +200,5 @@ export interface LectioDocument {
 	metadata: DocumentMetadata;
 	front_matter?: FrontMatter;
 	sections: LectioSection[];
-	answer_key?: DocumentBlock;
+	answer_key?: AnswerKeyBlock;
 }

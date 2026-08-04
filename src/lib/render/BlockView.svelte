@@ -1,17 +1,5 @@
 <script lang="ts">
-	import type {
-		AsideContent,
-		AnswerKeyContent,
-		ChoicesContent,
-		DocumentBlock,
-		FigureContent,
-		HeadingContent,
-		ListContent,
-		ProseContent,
-		QuestionsContent,
-		TableContent,
-		WorkedExampleContent
-	} from '$lib/contract/document';
+	import type { DocumentBlock } from '$lib/contract/document';
 	import HeadingView from './objects/HeadingView.svelte';
 	import ProseView from './objects/ProseView.svelte';
 	import ListView from './objects/ListView.svelte';
@@ -29,23 +17,23 @@
 </script>
 
 {#if block.object === 'heading'}
-	<HeadingView content={block.content as unknown as HeadingContent} />
+	<HeadingView content={block.content} />
 {:else if block.object === 'prose'}
-	<ProseView content={block.content as unknown as ProseContent} />
+	<ProseView content={block.content} />
 {:else if block.object === 'list'}
-	<ListView content={block.content as unknown as ListContent} />
+	<ListView content={block.content} />
 {:else if block.object === 'table'}
-	<TableView content={block.content as unknown as TableContent} {spanning} />
+	<TableView content={block.content} {spanning} />
 {:else if block.object === 'figure'}
-	<FigureView content={block.content as unknown as FigureContent} {spanning} />
+	<FigureView content={block.content} {spanning} />
 {:else if block.object === 'aside'}
-	<AsideView content={block.content as unknown as AsideContent} />
+	<AsideView content={block.content} />
 {:else if block.object === 'worked-example'}
-	<WorkedExampleView content={block.content as unknown as WorkedExampleContent} />
+	<WorkedExampleView content={block.content} />
 {:else if block.object === 'questions'}
-	<QuestionsView content={block.content as unknown as QuestionsContent} />
+	<QuestionsView content={block.content} />
 {:else if block.object === 'choices'}
-	<ChoicesView content={block.content as unknown as ChoicesContent} />
+	<ChoicesView content={block.content} />
 {:else if block.object === 'answer-key'}
-	<AnswerKeyView content={block.content as unknown as AnswerKeyContent} />
+	<AnswerKeyView content={block.content} />
 {/if}

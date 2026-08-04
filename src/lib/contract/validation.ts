@@ -63,7 +63,14 @@ export function validateDocument(doc: unknown): ValidationIssue[] {
 			if (!PAGE_OBJECTS.includes(block.object as PageObject)) {
 				issues.push({ path: `${bp}.object`, message: `Unknown object ${block.object}` });
 			}
-			if (!INTENT_IDS.includes(block.intent as IntentId)) {
+			if (block.object === 'heading') {
+				if (block.intent != null) {
+					issues.push({
+						path: `${bp}.intent`,
+						message: 'Heading is structural and must not carry a pedagogical intent'
+					});
+				}
+			} else if (!INTENT_IDS.includes(block.intent as IntentId)) {
 				issues.push({ path: `${bp}.intent`, message: `Unknown intent ${block.intent}` });
 			} else if (
 				PAGE_OBJECTS.includes(block.object as PageObject) &&

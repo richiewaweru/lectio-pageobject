@@ -25,8 +25,8 @@ describe('v2 contracts', () => {
 		expect(issues).toEqual([]);
 	});
 
-	it('allows heading with known intents and rejects bad object-intent pairs', () => {
-		expect(isCompatible('heading', 'orient')).toBe(true);
+	it('treats heading as structural (no intent compatibility)', () => {
+		expect(isCompatible('heading', 'orient')).toBe(false);
 		expect(isCompatible('aside', 'warn')).toBe(true);
 		expect(isCompatible('prose', 'answer-key')).toBe(false);
 	});

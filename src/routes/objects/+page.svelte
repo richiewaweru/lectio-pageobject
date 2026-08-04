@@ -10,7 +10,7 @@
 		heading: {
 			id: 's-h',
 			object: 'heading',
-			intent: 'state-goal',
+			intent: undefined,
 			position: 0,
 			content: { level: 2, text: 'Sample heading', number: '1' }
 		},

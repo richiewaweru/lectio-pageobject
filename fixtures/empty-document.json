@@ -17,16 +17,22 @@
         {
           "id": "h1",
           "object": "heading",
-          "intent": "state-goal",
           "position": 0,
-          "content": { "level": 2, "text": "Shell heading" }
+          "content": {
+            "level": 2,
+            "text": "Shell heading"
+          }
         },
         {
           "id": "p1",
           "object": "prose",
           "intent": "state-goal",
           "position": 1,
-          "content": { "paragraphs": ["This fixture exists so the contract validates an empty-ish document."] }
+          "content": {
+            "paragraphs": [
+              "This fixture exists so the contract validates an empty-ish document."
+            ]
+          }
         }
       ]
     }

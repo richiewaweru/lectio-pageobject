@@ -20,8 +20,7 @@ export function listIntents(): IntentId[] {
 }
 
 export function isCompatible(object: PageObject, intent: IntentId): boolean {
-	// Heading is structural; pedagogical intent applies to the bound following block.
-	if (object === 'heading') return Boolean(intents[intent]);
+	if (object === 'heading') return false;
 	const record = intents[intent];
 	if (!record) return false;
 	return record.valid_objects.includes(object);
